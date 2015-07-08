@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block body %}
+
+<!-- Modal -->
+<div class="modal fade" id="welcome-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Welcome to Latinoware!</h4>
+      </div>
+      <div class="modal-body">
+        <p>Here we have a welcome text and an explanation about the next steps</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if speaker.complete_name %}
+	<h2>Personal Informations</h2>
+	<p>Email: {{speaker.email}}</p>
+	<p>Complete Name: {{speaker.complete_name}}</p>
+	<p>NickName: {{speaker.nickname}}</p>
+	<p>Document: {{speaker.document}} ({{speaker.get_document_type_display}})</p>
+	<p>Contact Phones: {{speaker.contact_phones}}</p>
+	<p>Origin City: {{speaker.origin_city}}</p>
+{% else %}
+
+{% block javascript %}
+
+{% if show_first_time_modal %}
+<script>
+$( document ).ready(function() {
+    $('#welcome-modal').modal('show');
+});
+{% endif %}
+</script>
+{% endblock %}
+
+<h1>Please, fill your data bellow:</h1>
+
+<form method="post">
+	{% csrf_token %}
+	{% bootstrap_form speaker_form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">
+        {% bootstrap_icon "star" %} Submit
+      </button>
+    {% endbuttons %}
+</form>
+
+{% endif %}
+
+{% endblock %}
