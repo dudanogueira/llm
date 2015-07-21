@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block body %}
+
+<div class="row row-fluid">
+    <div class="col-md-6">
+            <h2>Personal Informations</h2>
+            <p>Email: {{speaker.email}}</p>
+            <p>Complete Name: {{speaker.complete_name}}</p>
+            <p>NickName: {{speaker.nickname}}</p>
+            <p>Document: {{speaker.document}} ({{speaker.get_document_type_display}})</p>
+            <p>Contact Phones: {{speaker.contact_phones}}</p>
+            <p>Origin City and State: {{speaker.origin_city_state}}</p>
+
+    </div>
+    <div class="col-md-6">
+        <h2>Flight Option: #{{  flight.id }}</h2>
+            <a href="{%  url "speaker" speaker.uuid %}">back</a><br />
+            Seen: {{ flight.seen_timestamp|date:"SHORT_DATETIME_FORMAT" }}<br />
+            <p class="well well-sm">
+                <b>Route Description</b><br />
+                {{ flight.route_description|linebreaksbr }}
+            </p>
+            Arrival: {{ flight.arrival_date|date:"SHORT_DATETIME_FORMAT" }} ({{ flight.arrival_description }})<br />
+            Departure: {{ flight.departure_date|date:"SHORT_DATETIME_FORMAT" }} ({{ flight.departure_description }})<br />
+
+
+        <p class="btn btn-group">
+            {%  if not flight.approved %}
+            <a class="btn btn-success" href="{%  url "speaker_flight_decision" speaker.uuid flight.pk "accept" %}">Accept</a>
+            <a class="btn btn-danger" href="{%  url "speaker_flight_decision" speaker.uuid flight.pk "deny" %}" >Reject</a>
+            {%  endif %}
+
+        </p>
+
+
+
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}

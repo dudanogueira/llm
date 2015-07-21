@@ -17,7 +17,33 @@
   </head>
 
   <body>
+  {% if messages %}
+      <div id="alertas">
+      {% for message in messages %}
+          {% if message.tags == "error" %}
+              <div class="alert alert-danger" role="alert">
+          {% else %}
+              <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+          {% endif %}
+      <a class="close" data-dismiss="alert">×</a>
+      {% if message.tags == "error" %}
+          <i class="fa fa-times-circle-o"></i>
+      {% endif %}
+      {% if message.tags == "info" %}
+          <i class="fa fa-comment"></i>
+      {% endif %}
+      {% if message.tags == "success" %}
+          <i class="fa fa-check-circle"></i>
+      {% endif %}
+      {% if message.tags == "warning" %}
+          <i class="fa fa-warning"></i>
+      {% endif %}
 
+      {{ message|safe }}
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
     <div class="container">
       <div class="header clearfix">
         <nav>

@@ -20,40 +20,66 @@
     </div>
   </div>
 </div>
+<div class="row row-fluid">
+    <div class="col-md-6">
+        {% if speaker.complete_name %}
+            <h2>Personal Informations</h2>
+            <p>Email: {{speaker.email}}</p>
+            <p>Complete Name: {{speaker.complete_name}}</p>
+            <p>NickName: {{speaker.nickname}}</p>
+            <p>Document: {{speaker.document}} ({{speaker.get_document_type_display}})</p>
+            <p>Contact Phones: {{speaker.contact_phones}}</p>
+            <p>Origin City and State: {{speaker.origin_city_state}}</p>
+        {% else %}
 
-{% if speaker.complete_name %}
-	<h2>Personal Informations</h2>
-	<p>Email: {{speaker.email}}</p>
-	<p>Complete Name: {{speaker.complete_name}}</p>
-	<p>NickName: {{speaker.nickname}}</p>
-	<p>Document: {{speaker.document}} ({{speaker.get_document_type_display}})</p>
-	<p>Contact Phones: {{speaker.contact_phones}}</p>
-	<p>Origin City: {{speaker.origin_city}}</p>
-{% else %}
+        {% block javascript %}
 
-{% block javascript %}
+        {% if show_first_time_modal %}
+        <script>
+        $( document ).ready(function() {
+            $('#welcome-modal').modal('show');
+        });
+        {% endif %}
+        </script>
+        {% endblock %}
 
-{% if show_first_time_modal %}
-<script>
-$( document ).ready(function() {
-    $('#welcome-modal').modal('show');
-});
-{% endif %}
-</script>
-{% endblock %}
+        <h1>Please, fill your data bellow:</h1>
 
-<h1>Please, fill your data bellow:</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form speaker_form %}
+            {% buttons %}
+              <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} Submit
+              </button>
+            {% endbuttons %}
+        </form>
+        {% endif %}
+    </div>
+    <div class="cold-md-6">
+        {%  if speaker.require_flight and speaker.complete_name %}
+        <h2>Flight Options</h2>
+            <ul>
+            {%  for flight in speaker.open_flight_options %}
+            <li>
+                {%  if not flight.seen %}
+                    <b>
+                {%  endif %}
+                <a href="{%  url "speaker_flight" speaker.uuid flight.pk %}">Flight Option ID #{{ flight.pk }} {%  if not flight.seen %}
+                    NEW!!
+                {%  endif %}</a>
+                 {%  if not flight.seen %}
+                    </b>
+                {%  endif %}
+            </li>
+            {% empty %}
+                <i>No Flight Options. You will get noticed by email when we have it.</i>
+            {%  endfor %}
+            </ul>
+        {%  endif %}
+    </div>
 
-<form method="post">
-	{% csrf_token %}
-	{% bootstrap_form speaker_form %}
-    {% buttons %}
-      <button type="submit" class="btn btn-primary">
-        {% bootstrap_icon "star" %} Submit
-      </button>
-    {% endbuttons %}
-</form>
+</div>
 
-{% endif %}
 
 {% endblock %}
